@@ -1,4 +1,4 @@
-// Generated from C:/Development/Repository/urisc-v/src/grammar/uriscv.g4 by ANTLR 4.13.2
+// Generated from ./src/grammar/uriscv.g4 by ANTLR 4.13.2
 // jshint ignore: start
 import antlr4 from 'antlr4';
 

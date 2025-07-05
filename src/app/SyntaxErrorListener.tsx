@@ -1,7 +1,12 @@
-// src/antlr/SyntaxErrorListener.ts
 import antlr4 from 'antlr4';
 
-export class SyntaxErrorListener extends antlr4.error.ErrorListener {
+const ErrorListener = antlr4.error?.ErrorListener;
+
+if (!ErrorListener) {
+    throw new Error('antlr4.error.ErrorListener not found. Check your antlr4 package version.');
+}
+
+export class SyntaxErrorListener extends ErrorListener {
     public errors: string[] = [];
 
     syntaxError(
@@ -12,6 +17,6 @@ export class SyntaxErrorListener extends antlr4.error.ErrorListener {
         msg: string,
         e: any
     ): void {
-        this.errors.push(`Line ${line}:${column} - ${msg}`);
+        this.errors.push(`Line ${line}:${column} - ${msg} Exception: ${e}`);
     }
 }

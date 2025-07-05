@@ -91,8 +91,9 @@ label
 // Lexer rules
 
 WORD_DIRECTIVE
-    : '.word'
+    : '.' [wW] [oO] [rR] [dD]
     ;
+
 
 REGISTER
     : 'x' [0-9]+

@@ -1,4 +1,4 @@
-// Generated from C:/Development/Repository/urisc-v/src/grammar/uriscv.g4 by ANTLR 4.13.2
+// Generated from ./src/grammar/uriscv.g4 by ANTLR 4.13.2
 // jshint ignore: start
 import antlr4 from 'antlr4';
 import uriscvListener from './uriscvListener.js';
@@ -85,8 +85,7 @@ export default class uriscvParser extends antlr4.Parser {
     static literalNames = [ null, "'LW'", "','", "'SW'", "'SUB'", "'ADD'", 
                             "'ADDI'", "'SLT'", "'SLTI'", "'SLL'", "'SLLI'", 
                             "'AND'", "'ANDI'", "'OR'", "'ORI'", "'BEQ'", 
-                            "'BNE'", "'BLT'", "'BGE'", "'('", "')'", "':'", 
-                            "'.word'" ];
+                            "'BNE'", "'BLT'", "'BGE'", "'('", "')'", "':'" ];
     static symbolicNames = [ null, null, null, null, null, null, null, null, 
                              null, null, null, null, null, null, null, null, 
                              null, null, null, null, null, null, "WORD_DIRECTIVE", 

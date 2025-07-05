@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
+    "generate-parser": "java -Xmx500M -cp ./tools/antlr/antlr-4.13.2-complete.jar org.antlr.v4.Tool -Dlanguage=JavaScript -visitor -o ./src/antlr ./src/grammar/uriscv.g4",
+    "dev": "npm run generate-parser && next dev --turbopack",
+    "build": "npm run generate-parser && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "antlr4": "^4.13.2",
+    "antlr4ts": "^0.5.0-alpha.4",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
