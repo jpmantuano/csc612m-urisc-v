@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import antlr4 from 'antlr4';
 import RiscVLexer from '../antlr/uriscvLexer';
 import RiscVParser from '../antlr/uriscvParser';
-import { SyntaxErrorListener } from './SyntaxErrorListener'; // your custom error listener
-import { RiscVCustomVisitor, Instruction } from './RiscVCustomVisitor'; // your visitor
+import {SyntaxErrorListener} from './SyntaxErrorListener'; // your custom error listener
+import {RiscVCustomVisitor, Instruction} from './RiscVCustomVisitor'; // your visitor
 
 const REG_COUNT = 32;
 const MEM_SIZE = 0x0800; // 2048 bytes (0x0000 - 0x07FF)
@@ -47,7 +47,7 @@ export default function SimulatorInput() {
 
             // Visit parse tree to extract instructions
             const visitor = new RiscVCustomVisitor();
-            const instructions = visitor.visitLw(tree);
+            const instructions = visitor.visit(tree);
 
             // Update state
             setParseErrors(errorListener.errors);
@@ -107,7 +107,7 @@ export default function SimulatorInput() {
                     <td>{toHex(i, 2)}</td>
                     <td>
                         {i === 0 ? (
-                            <input type="number" value={0} disabled />
+                            <input type="number" value={0} disabled/>
                         ) : (
                             <input
                                 type="number"
@@ -146,27 +146,27 @@ export default function SimulatorInput() {
     };
 
     return (
-        <div style={{ padding: 20, fontFamily: 'Arial, sans-serif' }}>
+        <div style={{padding: 20, fontFamily: 'Arial, sans-serif'}}>
             <h1>μRISCV Simulator Input</h1>
 
             {/* Assembly Input */}
-            <section style={{ marginBottom: 30 }}>
+            <section style={{marginBottom: 30}}>
                 <h2>1. Input RISC-V Assembly Program</h2>
                 <textarea
                     rows={10}
                     cols={80}
                     value={assembly}
                     onChange={(e) => onAssemblyChange(e.target.value)}
-                    style={{ fontFamily: 'monospace', fontSize: 14, width: '100%' }}
+                    style={{fontFamily: 'monospace', fontSize: 14, width: '100%'}}
                     spellCheck={false}
                 />
-                <p style={{ fontSize: 12, color: '#666' }}>
+                <p style={{fontSize: 12, color: '#666'}}>
                     Program memory range: 0x1000 - 0x1FFF
                 </p>
 
                 {/* Parsing Errors */}
                 {parseErrors.length > 0 && (
-                    <div style={{ color: 'red', marginTop: 10 }}>
+                    <div style={{color: 'red', marginTop: 10}}>
                         <b>Parsing Errors:</b>
                         <ul>
                             {parseErrors.map((err, i) => (
@@ -177,26 +177,43 @@ export default function SimulatorInput() {
                 )}
 
                 {/* Parsed Instructions Display */}
-                {parseErrors.length === 0 && parsedInstructions.length > 0 && (
-                    <div style={{ color: 'green', marginTop: 10, fontFamily: 'monospace' }}>
+                {/*{parseErrors.length === 0 && parsedInstructions.length > 0 && (*/}
+                {/*    <div style={{ color: 'green', marginTop: 10, fontFamily: 'monospace' }}>*/}
+                {/*        <b>Parsed Instructions:</b>*/}
+                {/*        <ul>*/}
+                {/*            {parsedInstructions.map((instr, i) => (*/}
+                {/*                <li key={`instr-${i}`}>*/}
+                {/*                    {instr.type === 'word'*/}
+                {/*                        ? `.word ${instr.wordValue} (line ${instr.line})`*/}
+                {/*                        : `${instr.mnemonic} ${instr.args?.join(', ')} (line ${instr.line})`}*/}
+                {/*                </li>*/}
+                {/*            ))}*/}
+                {/*        </ul>*/}
+                {/*    </div>*/}
+                {/*)}*/}
+                {parsedInstructions && parsedInstructions.length > 0 && (
+                    <div style={{color: 'green', marginTop: 10, fontFamily: 'monospace'}}>
                         <b>Parsed Instructions:</b>
                         <ul>
-                            {parsedInstructions.map((instr, i) => (
-                                <li key={`instr-${i}`}>
-                                    {instr.type === 'word'
-                                        ? `.word ${instr.wordValue} (line ${instr.line})`
-                                        : `${instr.mnemonic} ${instr.args?.join(', ')} (line ${instr.line})`}
-                                </li>
-                            ))}
+                            {parsedInstructions
+                                .filter((instr): instr is Instruction => instr !== undefined && instr !== null)
+                                .map((instr, i) => (
+                                    <li key={i}>
+                                        {instr.type === 'word'
+                                            ? `.word ${instr.wordValue} (line ${instr.line})`
+                                            : `${instr.mnemonic} ${instr.args?.join(', ')} (line ${instr.line})`}
+                                    </li>
+                                ))}
                         </ul>
                     </div>
                 )}
+
             </section>
 
             {/* Registers Input */}
-            <section style={{ marginBottom: 30 }}>
+            <section style={{marginBottom: 30}}>
                 <h2>2. Input Register Values (x1 to x31)</h2>
-                <table border={1} cellPadding={5} style={{ borderCollapse: 'collapse' }}>
+                <table border={1} cellPadding={5} style={{borderCollapse: 'collapse'}}>
                     <thead>
                     <tr>
                         <th>Register</th>
@@ -206,7 +223,7 @@ export default function SimulatorInput() {
                     </thead>
                     <tbody>{renderRegisters()}</tbody>
                 </table>
-                <p style={{ fontSize: 12, color: '#666' }}>
+                <p style={{fontSize: 12, color: '#666'}}>
                     Note: x0 is always zero and cannot be changed.
                 </p>
             </section>
@@ -214,7 +231,7 @@ export default function SimulatorInput() {
             {/* Memory Input */}
             <section>
                 <h2>3. Input Memory Values (Data Segment)</h2>
-                <div style={{ marginBottom: 10 }}>
+                <div style={{marginBottom: 10}}>
                     <label>
                         GOTO Memory Address (hex):&nbsp;
                         <input
@@ -222,14 +239,14 @@ export default function SimulatorInput() {
                             value={gotoAddr}
                             onChange={(e) => setGotoAddr(e.target.value)}
                             placeholder="e.g. 0x00A0"
-                            style={{ width: 80 }}
+                            style={{width: 80}}
                         />
                     </label>
-                    <button onClick={onGotoMemory} style={{ marginLeft: 10 }}>
+                    <button onClick={onGotoMemory} style={{marginLeft: 10}}>
                         Go
                     </button>
                 </div>
-                <table border={1} cellPadding={5} style={{ borderCollapse: 'collapse', width: '100%' }}>
+                <table border={1} cellPadding={5} style={{borderCollapse: 'collapse', width: '100%'}}>
                     <thead>
                     <tr>
                         <th>Address</th>
@@ -239,10 +256,10 @@ export default function SimulatorInput() {
                     </thead>
                     <tbody>{renderMemoryPage()}</tbody>
                 </table>
-                <p style={{ fontSize: 12, color: '#666' }}>
+                <p style={{fontSize: 12, color: '#666'}}>
                     Memory range: 0x0000 - 0x07FF (2048 bytes). Showing {MEM_PAGE_SIZE} bytes per page.
                 </p>
-                <div style={{ marginTop: 10 }}>
+                <div style={{marginTop: 10}}>
                     <button
                         onClick={() => setMemPageStart((start) => Math.max(0, start - MEM_PAGE_SIZE))}
                         disabled={memPageStart === 0}
@@ -256,7 +273,7 @@ export default function SimulatorInput() {
                             )
                         }
                         disabled={memPageStart >= MEM_SIZE - MEM_PAGE_SIZE}
-                        style={{ marginLeft: 10 }}
+                        style={{marginLeft: 10}}
                     >
                         Next Page
                     </button>

@@ -1,6 +1,4 @@
-// src/antlr/RiscVCustomVisitor.ts
 import RiscVVisitor from '../antlr/uriscvVisitor';
-import { ParseTree } from 'antlr4/tree/Tree';
 
 export interface Instruction {
     type: 'instruction' | 'word';
@@ -13,11 +11,24 @@ export interface Instruction {
 export class RiscVCustomVisitor extends RiscVVisitor {
     public instructions: Instruction[] = [];
 
-    // Visit the root program node
+    // Generic visit method (if your base class lacks it)
+    visit(ctx: any): any {
+        if (!ctx) return null;
+        const methodName = 'visit' + ctx.constructor.name.replace('Context', '');
+        if (typeof (this as any)[methodName] === 'function') {
+            return (this as any)[methodName](ctx);
+        }
+        if (ctx.children) {
+            for (const child of ctx.children) {
+                this.visit(child);
+            }
+        }
+        return null;
+    }
+
     visitProgram(ctx: any): Instruction[] {
-        // Visit all line children
         for (let i = 0; i < ctx.line().length; i++) {
-            this.visitLw(ctx.line(i));
+            this.visit(ctx.line(i)); // visits each line properly
         }
         return this.instructions;
     }
@@ -28,12 +39,13 @@ export class RiscVCustomVisitor extends RiscVVisitor {
         } else if (ctx.instruction()) {
             this.visitInstruction(ctx.instruction());
         }
-        // Labels and comments are ignored here but can be added if needed
+        // Labels and comments can be handled here if needed
     }
 
     visitDirective(ctx: any): void {
         if (ctx.WORD_DIRECTIVE()) {
-            const valText = ctx.wordValue().getText();
+            const valText = ctx.wordValue()?.getText();
+            if (!valText) return; // safety check
             let value = 0;
             if (valText.startsWith('0x') || valText.startsWith('0X')) {
                 value = parseInt(valText, 16);
@@ -49,11 +61,9 @@ export class RiscVCustomVisitor extends RiscVVisitor {
     }
 
     visitInstruction(ctx: any): void {
-        // The mnemonic is the first child token text
         const mnemonic = ctx.children[0].getText().toUpperCase();
         const args: string[] = [];
 
-        // Collect arguments by skipping commas and whitespace tokens
         for (let i = 1; i < ctx.children.length; i++) {
             const child = ctx.children[i];
             const text = child.getText();

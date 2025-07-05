@@ -15,7 +15,7 @@ line
     ;
 
 directive
-    : WORD_DIRECTIVE WS+ wordValue
+    : WORD_DIRECTIVE wordValue
     ;
 
 wordValue
@@ -43,23 +43,23 @@ instruction
     | bge
     ;
 
-lw    : 'LW'  WS+ register ',' WS* offsetBase ;
-sw    : 'SW'  WS+ register ',' WS* offsetBase ;
-sub   : 'SUB' WS+ register ',' WS* register ',' WS* register ;
-add   : 'ADD' WS+ register ',' WS* register ',' WS* register ;
-addi  : 'ADDI' WS+ register ',' WS* register ',' WS* immediate ;
-slt   : 'SLT' WS+ register ',' WS* register ',' WS* register ;
-slti  : 'SLTI' WS+ register ',' WS* register ',' WS* immediate ;
-sll   : 'SLL' WS+ register ',' WS* register ',' WS* register ;
-slli  : 'SLLI' WS+ register ',' WS* register ',' WS* shamt ;
-andInstr : 'AND' WS+ register ',' WS* register ',' WS* register ;
-andi  : 'ANDI' WS+ register ',' WS* register ',' WS* immediate ;
-orInstr  : 'OR'  WS+ register ',' WS* register ',' WS* register ;
-ori    : 'ORI' WS+ register ',' WS* register ',' WS* immediate ;
-beq    : 'BEQ' WS+ register ',' WS* register ',' WS* label ;
-bne    : 'BNE' WS+ register ',' WS* register ',' WS* label ;
-blt    : 'BLT' WS+ register ',' WS* register ',' WS* label ;
-bge    : 'BGE' WS+ register ',' WS* register ',' WS* label ;
+lw    : 'LW' register ',' offsetBase ;
+sw    : 'SW' register ',' offsetBase ;
+sub   : 'SUB' register ',' register ',' register ;
+add   : 'ADD' register ',' register ',' register ;
+addi  : 'ADDI' register ',' register ',' immediate ;
+slt   : 'SLT' register ',' register ',' register ;
+slti  : 'SLTI' register ',' register ',' immediate ;
+sll   : 'SLL' register ',' register ',' register ;
+slli  : 'SLLI' register ',' register ',' shamt ;
+andInstr : 'AND' register ',' register ',' register ;
+andi  : 'ANDI' register ',' register ',' immediate ;
+orInstr  : 'OR' register ',' register ',' register ;
+ori    : 'ORI' register ',' register ',' immediate ;
+beq    : 'BEQ' register ',' register ',' label ;
+bne    : 'BNE' register ',' register ',' label ;
+blt    : 'BLT' register ',' register ',' label ;
+bge    : 'BGE' register ',' register ',' label ;
 
 // Operands
 
